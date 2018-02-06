@@ -7,18 +7,50 @@
 //
 
 import UIKit
+import Firebase
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        FirebaseApp.configure()
+        
+//        let barstyle = UserDefaults.standard.object(forKey: "barstyle")
+//        if barstyle == 0 {
+//            
+//        } else {
+//            
+//        }
+        
+        changeStatusBar(bar: 0)
+        
+        let uid = UserDefaults.standard.object(forKey: "uid")
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        
+        if ((uid) == nil) {
+            let startViewController = storyboard.instantiateViewController(withIdentifier: "StartViewController")
+            self.window?.rootViewController = startViewController
+            self.window?.makeKeyAndVisible()
+        } else {
+            let tabBarController = storyboard.instantiateViewController(withIdentifier: "TabBarController")
+            self.window?.rootViewController = tabBarController
+            self.window?.makeKeyAndVisible()
+        }
+        
         return true
     }
 
+    func changeStatusBar(bar: Int) {
+        if bar == 0 {
+            UIApplication.shared.statusBarStyle = UIStatusBarStyle.lightContent
+        } else {
+            UIApplication.shared.statusBarStyle = UIStatusBarStyle.default
+        }
+    }
+    
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.

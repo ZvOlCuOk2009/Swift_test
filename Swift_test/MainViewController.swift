@@ -43,14 +43,14 @@ class MainViewController: UIViewController {
                 print("0")
                 self.view.backgroundColor = UIColor.black
                 self.navigationController?.navigationBar.barTintColor = UIColor.init(colorLiteralRed: 18/255, green: 18/255, blue: 18/255, alpha: 1)
-//                addBarButtonItem.image = UIImage(named: "add")
+
                 addBarButtonItem.tintColor = UIColor.white
                 self.tabBarController?.tabBar.barTintColor = .black
             } else {
                 currentBackground = 0
                 self.view.backgroundColor = UIColor.white
                 self.navigationController?.navigationBar.barTintColor = UIColor.init(colorLiteralRed: 245/255, green: 245/255, blue: 245/255, alpha: 1)
-//                addBarButtonItem.image = UIImage(named: "add_black")
+
                 addBarButtonItem.tintColor = UIColor.black
                 self.tabBarController?.tabBar.barTintColor = UIColor.init(colorLiteralRed: 245/255, green: 245/255, blue: 245/255, alpha: 1)
                 print("1")
@@ -60,17 +60,9 @@ class MainViewController: UIViewController {
     
     @IBAction func actionAddNew(_ sender: Any) {
         
-//        let tabBarController = storyboard?.instantiateViewController(withIdentifier: "TabBarController")
-        
         let newMassageController = storyboard?.instantiateViewController(withIdentifier: "NewMassageController")
-//        let navController = UINavigationController(rootViewController: newMassageController!)
-//        present(navController, animated: true, completion: nil)
-        self.navigationController?.pushViewController(newMassageController!, animated: true)
         
-//        if self.storyboard != nil {
-//            let tabBarController = self.storyboard?.instantiateViewController(withIdentifier: "TabBarController")
-//            self.present(tabBarController!, animated: false, completion: nil)
-//        }
+        self.navigationController?.pushViewController(newMassageController!, animated: true)
     }
     
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
@@ -105,15 +97,7 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "customCell", for: indexPath) as! CustomNewsTableViewCell
         
-//        switch indexPath.row % 2 {
-//        case 0:
-//            cell.titleLabel.text = "FIRAuthErrorCodeInvalidEmail, Indicates the email address is malformed."
-//        default:
-//            cell.titleLabel.text = "Swift. Objective-C. Más. Use Firebase library to configure APIs."
-//        }
-        
         if self.snapshots.count > 0 {
-//            let text = self.snapshots
             cell.titleLabel.text = self.test[indexPath.row]
         }
         
@@ -129,10 +113,5 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return 70
     }
-    
-//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat
-//    {
-//        return 100.0;//Choose your custom row height
-//    }
     
 }

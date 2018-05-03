@@ -101,6 +101,11 @@
       "idiom" : "ipad",
       "filename" : "Снимок экрана 2018-01-06 в 17.25.32 — копия 11.png",
       "scale" : "2x"
+    },
+    {
+      "idiom" : "ios-marketing",
+      "size" : "1024x1024",
+      "scale" : "1x"
     }
   ],
   "info" : {

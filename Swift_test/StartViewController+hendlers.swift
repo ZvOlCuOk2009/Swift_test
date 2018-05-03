@@ -67,7 +67,8 @@ extension StartViewController: UIImagePickerControllerDelegate, UINavigationCont
             } else {
                 if (error == nil) {
                     
-                    let storageRef = Storage.storage().reference().child("myImage.png")
+                    let imageName = NSUUID().uuidString
+                    let storageRef = Storage.storage().reference().child("\(imageName).png")
                     if let uploadData = UIImagePNGRepresentation(self.profileImageView.image!) {
                         
                         storageRef.putData(uploadData, metadata: nil, completion: { (metaData, error) in
@@ -84,9 +85,6 @@ extension StartViewController: UIImagePickerControllerDelegate, UINavigationCont
                             }
                         })
                     }
-                    
-                    self.registerUserInfoDataBaseWithUID(uid: uid!, dictUser: dictUser)
-                    
                 } else {
                     self.showAlert(title: "Не верный логин или пароль!")
                 }
@@ -94,8 +92,8 @@ extension StartViewController: UIImagePickerControllerDelegate, UINavigationCont
         }
     }
     
-    private func registerUserInfoDataBaseWithUID(uid: String, dictUser: [di: AnyObject]) {
-      
+    private func registerUserInfoDataBaseWithUID(uid: String, dictUser:Dictionary<String, Any>) {
+        
         var ref: DatabaseReference!
         ref = Database.database().reference()
         
@@ -109,4 +107,20 @@ extension StartViewController: UIImagePickerControllerDelegate, UINavigationCont
         
         self.openMainVC(uid: uid)
     }
+    
+//    private func registerUserInfoDataBaseWithUID(uid: String, dictUser: [Dictionary: AnyObject]) {
+//
+//        var ref: DatabaseReference!
+//        ref = Database.database().reference()
+//
+//        let usersRef = ref.child("users") .child(uid)
+//
+//        usersRef.updateChildValues(dictUser, withCompletionBlock: { (err, ref) in
+//            if err != nil {
+//                print(err?.localizedDescription ?? String())
+//            }
+//        })
+//
+//        self.openMainVC(uid: uid)
+//    }
 }

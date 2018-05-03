@@ -14,12 +14,13 @@ class NewMassageController: UIViewController, UITableViewDataSource, UITableView
     let cellIdentifier = "cell"
     var tableView :UITableView! = nil
     var users = [User]()
-    
+//    var users = NSMutableArray()
+    var pars = Parser()
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        navigationController?.navigationBar.barTintColor = UIColor.black
+//        navigationController?.navigationBar.barTintColor = UIColor.black
         navigationController?.navigationBar.isTranslucent = false
         navigationController?.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
 //        navigationItem.leftBarButtonItem = UIBarButtonItem.init(image: UIImage(named: "cancel"), style: .plain, target: self, action: #selector(actionDismissSelf))
@@ -35,24 +36,41 @@ class NewMassageController: UIViewController, UITableViewDataSource, UITableView
         self.tableView.register(UserCell.self, forCellReuseIdentifier: cellIdentifier)
         
         fetchUsers()
+        
+//        let arr = NSArray()
+        
+//        print(new)
     }
     
     func fetchUsers () {
         
         Database.database().reference().child("users").observe(.childAdded, with: { (snapshot) in
             if let dictionary = snapshot.value as? [String :AnyObject] {
+                
+//                let arr = NSArray()
+                
+//                let pars = Parser()
+//                let dict = dictionary
+//                self.users = self.pars.initObjectsFromDataBase(dictionary: dictionary as NSDictionary)
+//                if self.users.count > 0 {
+//                    self.tableView.reloadData()
+//                }
+//                let new = pars.initObjectsFromDataBase(dict: arr)
+//                print(new)
+                
                 let user = User()
                 user.setValuesForKeys(dictionary)
-                self.users.append(user)
+//                print(user.name, user.email, user.profileImageUrl)
                 
+//                user.setValuesForKeys(dictionary)
+                self.users.append(user)
+
                 DispatchQueue.global(qos: .userInitiated).async {
                     DispatchQueue.main.async {
-                        
                         self.tableView.reloadData()
                     }
                 }
             }
-            
         }, withCancel: nil)
     }
     
@@ -85,19 +103,47 @@ class NewMassageController: UIViewController, UITableViewDataSource, UITableView
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
 //        let cell = tableView.dequeueReusableCell(withIdentifier: "customCell") as! CustomTableViewCell
-        
 //        let cell = tableView.dequeueReusableCell(withIdentifier: "customCell")!
-        
 //        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: cellIdentifier)
         
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
         
+        let user = users[indexPath.row]
+        cell.textLabel?.text = (user as AnyObject).name
+        cell.detailTextLabel?.text = (user as AnyObject).email
+        
+//        cell.imageView?.image = UIImage(named: "cat")
         cell.textLabel?.textColor = UIColor.white
         cell.detailTextLabel?.textColor = UIColor.white
         cell.backgroundColor = UIColor.black
-        let user = users[indexPath.row]
-        cell.textLabel?.text = user.name
-        cell.detailTextLabel?.text = user.email
+        
+        cell.imageView?.image = UIImage(named: "avatar-placeholder")
+        
+        //set the image URL
+        let url = (user).profileImageUrl
+        
+        let imageUrl = URL(string: url)!
+    
+        //create a URL Session, this time a shared one since its a simple app
+        let session = URLSession.shared
+        //then create a URL data task since we are getting simple data
+        
+        let queue = DispatchQueue.global(qos: .utility)
+        
+        let task = session.dataTask(with:imageUrl) { (data, response, error) in
+            if error == nil {
+                let downloadedImage = UIImage(data: data!)
+                
+                queue.async {
+                    DispatchQueue.main.async {
+                        cell.imageView?.image = downloadedImage
+                    }
+                }
+            }
+        }
+        task.resume()
+        
+
         return cell
     }
 }

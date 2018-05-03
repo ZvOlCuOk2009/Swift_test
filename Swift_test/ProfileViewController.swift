@@ -17,16 +17,31 @@ class ProfileViewController: UIViewController {
         super.viewDidLoad()
         
         let ref = Database.database().reference()
-        
         let uid = Auth.auth().currentUser?.uid
+        
         ref.child("users") .child(uid!).observe(.value, with: { (snapshot) in
             if let dictionary = snapshot.value as? [String: AnyObject] {
                 self.navigationItem.title = dictionary["name"] as? String
+                
+//                let url = NSURL(fileURLWithPath: dictionary["profileImageUrl"] as! String)
+//                let data = NSData(contentsOf: url as URL)
+//                let image = UIImage(data: data! as Data)
+//                
+//                let avatar = UIImageView(image: image)
+//                
+//                avatar.frame = CGRect(x: 20, y: 0, width: 40, height: 40)
+//                self.navigationController?.navigationBar.addSubview(avatar)
             }
+//            let dictionary = snapshot.value as? [String: AnyObject]
+//            self.navigationItem.title = dictionary!["name"] as? String
+//
+//            let name = dictionary!["name"] as? String
+//
+//            print(name)
+            
         }) { (err) in
             print(err)
         }
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -46,6 +61,27 @@ class ProfileViewController: UIViewController {
     }
     
     @IBAction func handleLogOut(_ sender: Any) {
+        
+        let alert = UIAlertController(title: "Выйти из приложонеия",
+                                      message: nil,
+                                      preferredStyle: .alert)
+        
+        let actionNo = UIAlertAction(title: "Нет",
+                                   style: .cancel,
+                                   handler: nil)
+        
+        let actionYes = UIAlertAction(title: "Да",
+                                   style: .destructive,
+                                   handler: { _ in
+                                    self.logOutAction()
+        })
+        
+        alert.addAction(actionNo)
+        alert.addAction(actionYes)
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    func logOutAction() {
         try! Auth.auth().signOut()
         if self.storyboard != nil {
             UserDefaults.standard.removeObject(forKey: "uid")
